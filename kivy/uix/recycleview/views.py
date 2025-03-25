@@ -242,7 +242,7 @@ class RecycleDataAdapter(EventDispatcher):
             return
         stale = False
         view = None
-
+        print("using forked recycledataadapter")
         if viewclass in dirty_views:  # get it first from dirty list
             dirty_class = dirty_views[viewclass]
             if index in dirty_class:
@@ -250,13 +250,13 @@ class RecycleDataAdapter(EventDispatcher):
                 view = dirty_class.pop(index)
             elif _cached_views[viewclass]:
                 # global cache has this class, update data
-                view, stale = _cached_views[viewclass].pop(), True
+                view, stale = _cached_views[viewclass].pop(0), True
             elif dirty_class:
                 # random any dirty view element - update data
                 view, stale = dirty_class.popitem()[1], True
         elif _cached_views[viewclass]:  # otherwise go directly to cache
             # global cache has this class, update data
-            view, stale = _cached_views[viewclass].pop(), True
+            view, stale = _cached_views[viewclass].pop(0), True
 
         if view is None:
             view = self.create_view(index, data_item, viewclass)
